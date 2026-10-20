@@ -21,8 +21,10 @@ skills/methodology library, and curated OSINT/recon MCP servers.
   `nvidia-nim`, `groq`, `cerebras`, `deepseek`, `mistral`, `togetherai`,
   `lmstudio`, `ollama`, `openai-compatible`, plus Anthropic/OpenAI/Gemini.
   Pick one with `hydra --provider <id>` or `/model` in a session.
-- **MCP:** curated OSINT/recon MCP servers are provided as opt-in config
-  (disabled by default).
+- **MCP:** a curated, opt-in set of OSINT/recon MCP servers ships as
+  [`docs/hydra-mcp.example.json`](hydra-mcp.example.json). Copy it to
+  `~/.jcode/mcp.json`, set the env vars, then `hydra mcp list` / `hydra mcp test <name>`.
+  Nothing runs until you enable it.
 
 ## Build
 

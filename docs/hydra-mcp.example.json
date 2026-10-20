@@ -1,0 +1,43 @@
+{
+  "//": "HYDRA curated MCP servers for authorized OSINT / recon. OPT-IN: this is an example.",
+  "//usage": "Copy to ~/.jcode/mcp.json (or a project .mcp.json), set the env vars, then: hydra mcp list / hydra mcp test <name>.",
+  "//safety": "Authorized testing only. Keep intrusive servers off until you have written scope. Never commit real credentials (use ${ENV} placeholders).",
+  "mcpServers": {
+    "fetch": {
+      "//": "Fetch and read web pages (passive recon of in-scope targets). Official server.",
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    },
+    "playwright": {
+      "//": "Headless browser for recon / manual verification. Does NOT bypass bot detection. Microsoft official.",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest", "--headless", "--isolated"]
+    },
+    "brave-search": {
+      "//": "OSINT web search. Needs a Brave Search API key.",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+      "env": { "BRAVE_API_KEY": "${BRAVE_API_KEY}" }
+    },
+    "shodan": {
+      "//": "OSINT host/service intel. Enable with a Shodan MCP server of your choice + SHODAN_API_KEY.",
+      "//disabled": "Example stdio entry — verify the package before enabling.",
+      "command": "npx",
+      "args": ["-y", "shodan-mcp-server"],
+      "env": { "SHODAN_API_KEY": "${SHODAN_API_KEY}" }
+    },
+    "virustotal": {
+      "//": "File/URL/domain reputation (OSINT). Add a VirusTotal MCP server + VT_API_KEY.",
+      "//disabled": "Example stdio entry — verify the package before enabling.",
+      "command": "npx",
+      "args": ["-y", "virustotal-mcp"],
+      "env": { "VT_API_KEY": "${VT_API_KEY}" }
+    },
+    "remote-template": {
+      "//": "Template for a remote (Streamable HTTP) MCP server with a bearer token.",
+      "type": "http",
+      "url": "https://mcp.example.com/mcp",
+      "headers": { "Authorization": "Bearer ${MCP_TOKEN}" }
+    }
+  }
+}
