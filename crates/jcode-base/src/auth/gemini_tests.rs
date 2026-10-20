@@ -128,20 +128,25 @@ fn resolve_callback_or_manual_code_validates_state_for_callback_input() {
 }
 
 #[test]
-fn uses_hardcoded_credentials_when_env_missing() {
+fn uses_env_credentials_when_set() {
+    // HYDRA fork: the upstream hardcoded desktop OAuth creds are redacted, so
+    // Gemini OAuth now sources its client id/secret from env vars. Verify the
+    // override path builds a valid auth URL using the provided client id.
     let _guard = lock_test_env();
-    crate::env::remove_var(GEMINI_CLIENT_ID_ENV);
-    crate::env::remove_var(GEMINI_CLIENT_SECRET_ENV);
+    crate::env::set_var(
+        GEMINI_CLIENT_ID_ENV,
+        "test-client-id.apps.googleusercontent.com",
+    );
+    crate::env::set_var(GEMINI_CLIENT_SECRET_ENV, "test-secret");
 
-    // Should succeed with hardcoded credentials
     let url = build_manual_auth_url(GEMINI_MANUAL_REDIRECT_URI, "challenge-123", "state-123")
-        .expect("should use hardcoded credentials");
+        .expect("should use env-provided credentials");
     assert!(url.contains("codeassist.google.com%2Fauthcode"));
     assert!(url.contains("code_challenge=challenge-123"));
-    // Should contain the hardcoded client ID
-    assert!(
-        url.contains("681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com")
-    );
+    assert!(url.contains("test-client-id.apps.googleusercontent.com"));
+
+    crate::env::remove_var(GEMINI_CLIENT_ID_ENV);
+    crate::env::remove_var(GEMINI_CLIENT_SECRET_ENV);
 }
 
 #[test]
